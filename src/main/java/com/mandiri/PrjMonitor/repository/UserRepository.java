@@ -7,9 +7,9 @@ import org.springframework.data.repository.query.Param;
 import com.mandiri.PrjMonitor.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long>{
-	@Query("from User WHERE email = ?1")
+	@Query("SELECT * FROM m_user WHERE email = ?1")
 	User findByEmail(String email);
 	
-	@Query("from User WHERE email = :email AND password = :password")
+	@Query("SELECT * FROM m_user WHERE email = :email AND password = :password")
 	User findByEmailAndPassword(@Param("email") String email, @Param("password") String password);
 }

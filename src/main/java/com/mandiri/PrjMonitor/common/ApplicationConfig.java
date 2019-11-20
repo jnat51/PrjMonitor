@@ -6,7 +6,6 @@ import javax.sql.DataSource;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -17,8 +16,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableJpaRepositories
 @EnableTransactionManagement
-@PropertySource(value= {"classpath:application.properties"})
 class ApplicationConfig {
+
 	@Bean
 	public DataSource dataSource() {
 		return DataSourceBuilder
@@ -26,7 +25,7 @@ class ApplicationConfig {
         	    .username("root")
         	    .password("") 
         	    .url("jdbc:mysql://localhost:3306/project_monitoring?serverTimezone=UTC")
-				.driverClassName("com.mysql.cj.jdbc.Driver")
+        	    .driverClassName("com.mysql.cj.jdbc.Driver")
         	    .build(); 
 	}
 
