@@ -1,13 +1,6 @@
 package com.mandiri.ProjectMonitor.controller;
 
-import java.io.IOException;
 import java.util.List;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -31,7 +24,6 @@ import com.mandiri.ProjectMonitor.model.user.User;
 import com.mandiri.ProjectMonitor.model.user.UserRegister;
 
 @Controller
-@RequestMapping("/user")
 public class UserController implements ErrorController {
 	@Autowired
 	UserService userService;
@@ -85,8 +77,30 @@ public class UserController implements ErrorController {
 			return "/error";
 		}
 	}
+	
+	@PostMapping(value = "/user/update")
+	public String updateUser(@RequestBody User user) {
+		try {
+			System.out.println("test");
+			System.out.println(user.getId());
+			User us = userService.findById(user.getId()).get();
+			
+			System.out.println(us.getName());
+			System.out.println(us.getId());
+			
+			String encryptedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(12));
+			user.setPassword(encryptedPassword);
+			
+			userService.updateUser(user);
 
-	@PostMapping(value = "/")
+			return "success";
+		} catch (Exception e) {
+			System.out.println(e);
+			return "/error";
+		}
+	}
+
+	@PostMapping(value = "/user/insert")
 	public ResponseEntity<?> saveUser(@RequestBody User user) {
 		try {
 			String encryptedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(12));
@@ -124,7 +138,7 @@ public class UserController implements ErrorController {
 		}
 	}
 
-	@GetMapping(value = "/")
+	@GetMapping(value = "/user/all")
 	public ResponseEntity<?> allUser() {
 		try {
 			List<User> users = userService.findAll();

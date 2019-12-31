@@ -2,6 +2,7 @@ package com.mandiri.ProjectMonitor.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -9,38 +10,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mandiri.ProjectMonitor.exception.ErrorException;
-import com.mandiri.ProjectMonitor.model.user.User;
-import com.mandiri.ProjectMonitor.repository.UserRepository;
+import com.mandiri.ProjectMonitor.model.Category;
+import com.mandiri.ProjectMonitor.repository.CategoryRepository;
 
 @Service
 public class CategoryService {
 	@Autowired
-	UserRepository userRepository;
+	CategoryRepository categoryRepository;
 	
 	@Transactional
-	public void insertUser(User user) throws ErrorException {
-		if(userRepository.existsById(user.getId())==true) {
-			throw new ErrorException("User already exist");
+	public void insertCategory(Category category) throws ErrorException {
+		if(categoryRepository.existsById(category.getId())==true) {
+			throw new ErrorException("Category already exist");
 		}
-		if(userRepository.findByEmail(user.getEmail())!=null)
-		{
-			throw new ErrorException("Email already used");
-		}
-		userRepository.save(user);
+		categoryRepository.save(category);
 	}
 	
-	public User findByEmail(String email) throws ErrorException {
-		if(userRepository.findByEmail(email)==null) {
-			throw new ErrorException("Wrong email and/or password");
+	public List<Category> findAll() throws ErrorException {
+		if(categoryRepository.findAll().size()==0) {
+			return new ArrayList<Category>();
 		}
-		return userRepository.findByEmail(email);
+		return categoryRepository.findAll();
 	}
-	
-	public List<User> findAll() throws ErrorException {
-		if(userRepository.findAll().size()==0) {
-			return new ArrayList<User>();
-		}
-		return userRepository.findAll();
+
+	public Optional<Category> findById(long id) throws ErrorException {
+		return categoryRepository.findById(id);
 	}
-	
 }

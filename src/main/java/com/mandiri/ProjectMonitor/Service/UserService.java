@@ -2,6 +2,7 @@ package com.mandiri.ProjectMonitor.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -29,6 +30,17 @@ public class UserService {
 		userRepository.save(user);
 	}
 	
+	public void updateUser(User user) throws ErrorException{
+		if(userRepository.findById(user.getId())==null) {
+			throw new ErrorException("User id not exist");
+		}
+		if(userRepository.findByEmail(user.getEmail())==null)
+		{
+			throw new ErrorException("Email cannot be changed");
+		}
+		userRepository.save(user);
+	}
+	
 	public User findByEmail(String email) throws ErrorException {
 		if(userRepository.findByEmail(email)==null) {
 			throw new ErrorException("Wrong email and/or password");
@@ -38,11 +50,16 @@ public class UserService {
 	
 	public List<User> findAll() throws ErrorException {
 		if(userRepository.findAll().size()==0) {
-			System.out.println("kosong");
 			return new ArrayList<User>();
 		}
-		System.out.println(userRepository.findAll().size());
 		return userRepository.findAll();
 	}
 	
+	public Optional<User> findById(long id) throws ErrorException{
+		if(userRepository.findById(id)==null)
+		{
+			throw new ErrorException("User not found");
+		}
+		return userRepository.findById(id);
+	}
 }

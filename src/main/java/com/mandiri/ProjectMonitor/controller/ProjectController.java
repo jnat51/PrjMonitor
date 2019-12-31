@@ -1,20 +1,17 @@
 package com.mandiri.ProjectMonitor.controller;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.mandiri.ProjectMonitor.Service.ProjectService;
@@ -61,7 +58,7 @@ public class ProjectController {
 	}
 
 	@PostMapping(value = "/insert/project")
-	public ResponseEntity<?> insert(@RequestBody ProjectRegister projectRegister) {
+	public String insert(@RequestBody ProjectRegister projectRegister) {
 		try {
 			DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -85,13 +82,27 @@ public class ProjectController {
 			project.setDateUpdated(dateUpdated);
 
 			projectService.insertProject(project);
-
-			return new ResponseEntity<>("sukses", HttpStatus.OK);
-			// return "";
+			
+			return "sukses";
 		} catch (Exception e) {
 			System.out.println(e);
-			return new ResponseEntity<>("Gagal", HttpStatus.INTERNAL_SERVER_ERROR);
-			// return "";
+			return "gagal";
+		}
+	}
+	
+	@PutMapping(value="/project/update")
+	public String updateProject(@RequestBody Project project)
+	{
+		try {
+			Project prj = projectService.findById(project.getId()).get();
+			project.setDateUpdated(LocalDateTime.now());
+			
+			projectService.updateProject(project);
+			
+			return "sukses";
+		}
+		catch (Exception e){
+			return "gagal";
 		}
 	}
 }

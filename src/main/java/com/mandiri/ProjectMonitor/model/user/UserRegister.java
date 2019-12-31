@@ -1,6 +1,8 @@
 package com.mandiri.ProjectMonitor.model.user;
 
 public class UserRegister{
+	private long id;
+	
 	private long roleId;
 	
 	private String name;
@@ -10,6 +12,14 @@ public class UserRegister{
 	private String username;
 	
 	private String password;
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
 
 	public long getRoleId() {
 		return roleId;
