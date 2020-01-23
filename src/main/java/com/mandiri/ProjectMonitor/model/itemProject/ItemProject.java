@@ -1,4 +1,4 @@
-package com.mandiri.ProjectMonitor.model;
+package com.mandiri.ProjectMonitor.model.itemProject;
 
 import java.time.LocalDate;
 
@@ -8,11 +8,14 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mandiri.ProjectMonitor.Enum.Enum.Status;
+import com.mandiri.ProjectMonitor.model.Category;
 import com.mandiri.ProjectMonitor.model.project.Project;
 
 @Entity
@@ -20,10 +23,11 @@ import com.mandiri.ProjectMonitor.model.project.Project;
 public class ItemProject{
 	@Id
 	@Column(name="id")
-	private int id;
+	private long id;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name="project_id", referencedColumnName="id")
+	@JsonIgnoreProperties(value = {"itemProject"}, allowSetters=true)
 	private Project project;
 	
 	@OneToOne
@@ -46,11 +50,11 @@ public class ItemProject{
 	@Column(name="end_act")
 	private LocalDate endAct;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

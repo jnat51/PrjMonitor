@@ -1,11 +1,5 @@
 package com.mandiri.ProjectMonitor.model.project;
 
-import java.time.LocalDateTime;
-
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-
 import com.mandiri.ProjectMonitor.model.Department;
 import com.mandiri.ProjectMonitor.model.user.User;
 

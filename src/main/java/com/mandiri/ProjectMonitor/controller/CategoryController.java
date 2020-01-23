@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.mandiri.ProjectMonitor.Service.CategoryService;
 import com.mandiri.ProjectMonitor.exception.ErrorException;
 import com.mandiri.ProjectMonitor.model.Category;
+import com.mandiri.ProjectMonitor.service.CategoryService;
 
 @Controller
 public class CategoryController {

@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.mandiri.ProjectMonitor.Service.RoleService;
 import com.mandiri.ProjectMonitor.model.Role;
+import com.mandiri.ProjectMonitor.service.RoleService;
 
 @Controller
 @RequestMapping(value="/role")
@@ -24,7 +24,7 @@ public class RoleController{
 		try {
 			roleService.insertRole(role);
 
-			return new ResponseEntity<>("Admin inserted", HttpStatus.OK);
+			return new ResponseEntity<>("Role inserted", HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}

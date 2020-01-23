@@ -1,7 +1,6 @@
-package com.mandiri.ProjectMonitor.Service;
+package com.mandiri.ProjectMonitor.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -21,7 +20,7 @@ public class RoleService {
 		roleRepository.save(role);
 	}
 	
-	public List<Role> getAllUser(){
+	public List<Role> findAll(){
 		return roleRepository.findAll();
 	}
 	

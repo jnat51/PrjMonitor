@@ -1,4 +1,4 @@
-package com.mandiri.ProjectMonitor.Service;
+package com.mandiri.ProjectMonitor.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +30,9 @@ public class UserService {
 		userRepository.save(user);
 	}
 	
+	@Transactional
 	public void updateUser(User user) throws ErrorException{
-		if(userRepository.findById(user.getId())==null) {
+		if(userRepository.existsById(user.getId())==false) {
 			throw new ErrorException("User id not exist");
 		}
 		if(userRepository.findByEmail(user.getEmail())==null)
@@ -55,11 +56,14 @@ public class UserService {
 		return userRepository.findAll();
 	}
 	
-	public Optional<User> findById(long id) throws ErrorException{
+	public User findById(long id) throws ErrorException{
+		User user = null;
+		
 		if(userRepository.findById(id)==null)
 		{
 			throw new ErrorException("User not found");
 		}
-		return userRepository.findById(id);
+		user = userRepository.findById(id).get();
+		return user;
 	}
 }

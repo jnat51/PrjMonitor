@@ -1,16 +1,22 @@
 package com.mandiri.ProjectMonitor.model.project;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mandiri.ProjectMonitor.model.Department;
+import com.mandiri.ProjectMonitor.model.itemProject.ItemProject;
 import com.mandiri.ProjectMonitor.model.user.User;
 @Entity
 @Table(name="m_project", uniqueConstraints = @UniqueConstraint(columnNames = { "project_code" }))
@@ -44,6 +50,10 @@ public class Project{
 	
 	@Column(name="date_updated")
 	private LocalDateTime dateUpdated;
+	
+	@OneToMany(mappedBy="project", cascade=CascadeType.REMOVE, fetch=FetchType.EAGER)
+	@JsonIgnoreProperties(value = {"project"}, allowSetters=true)
+	private List<ItemProject> itemProject;
 
 	public long getId() {
 		return id;
@@ -115,5 +125,14 @@ public class Project{
 
 	public void setDateUpdated(LocalDateTime dateUpdated) {
 		this.dateUpdated = dateUpdated;
+		
+	}
+
+	public List<ItemProject> getItemProject() {
+		return itemProject;
+	}
+
+	public void setItemProject(List<ItemProject> itemProject) {
+		this.itemProject = itemProject;
 	}	
 }

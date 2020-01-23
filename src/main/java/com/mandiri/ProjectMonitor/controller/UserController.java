@@ -15,13 +15,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.mandiri.ProjectMonitor.Service.RoleService;
-import com.mandiri.ProjectMonitor.Service.UserService;
 import com.mandiri.ProjectMonitor.exception.ErrorException;
+import com.mandiri.ProjectMonitor.model.Role;
 import com.mandiri.ProjectMonitor.model.user.User;
+import com.mandiri.ProjectMonitor.model.user.UserLogin;
 import com.mandiri.ProjectMonitor.model.user.UserRegister;
+import com.mandiri.ProjectMonitor.service.RoleService;
+import com.mandiri.ProjectMonitor.service.UserService;
 
 @Controller
 public class UserController implements ErrorController {
@@ -31,15 +32,22 @@ public class UserController implements ErrorController {
 	@Autowired
 	RoleService roleService;
 
-	@RequestMapping("/hello")
-	public String hello() {
-		return "index";
-	}
-
 	@GetMapping("/register")
 	public String register(Model model) {
 		model.addAttribute("userForm", new UserRegister());
-		return "register";
+		
+		List<Role> roles = roleService.findAll();
+		model.addAttribute("roles", roles);
+		
+		return "/register";
+	}
+	
+	@GetMapping("/")
+	public String login(Model model) {
+		model.addAttribute("loginForm", new UserLogin());
+		
+		//view name
+		return "/index";
 	}
 
 	@GetMapping("/userview")
@@ -51,7 +59,7 @@ public class UserController implements ErrorController {
 		return "userview";
 	}
 
-	@PostMapping(value = "/register")
+	@PostMapping(value = "/user/register")
 	public String register(@ModelAttribute("userForm") UserRegister userRegister, BindingResult result) {
 		try {
 			if (result.hasErrors()) {
@@ -74,6 +82,7 @@ public class UserController implements ErrorController {
 			return "success";
 		} catch (Exception e) {
 			System.out.println(e);
+			e.printStackTrace();
 			return "/error";
 		}
 	}
@@ -83,19 +92,19 @@ public class UserController implements ErrorController {
 		try {
 			System.out.println("test");
 			System.out.println(user.getId());
-			User us = userService.findById(user.getId()).get();
+			User us = userService.findById(user.getId());
 			
 			System.out.println(us.getName());
 			System.out.println(us.getId());
 			
 			String encryptedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(12));
-			user.setPassword(encryptedPassword);
+			us.setPassword(encryptedPassword);
 			
-			userService.updateUser(user);
+			userService.updateUser(us);
 
 			return "success";
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return "/error";
 		}
 	}
@@ -120,21 +129,27 @@ public class UserController implements ErrorController {
 		}
 	}
 
-	@GetMapping(value = "/login")
-	public ResponseEntity<?> loginUser(@RequestParam String email, @RequestParam String password) {
+	@PostMapping(value = "/user/login")
+	public String loginUser(@ModelAttribute("loginForm") UserLogin userLogin, BindingResult result) {
 		try {
-			boolean matched = BCrypt.checkpw(password, userService.findByEmail(email).getPassword());
+			if (result.hasErrors()) {
+				System.out.println(result.toString());
+				return "/index";
+			}
+			boolean matched = BCrypt.checkpw(userLogin.getPassword(), userService.findByEmail(userLogin.getEmail()).getPassword());
 			User user = null;
 			// User user = userService.login(email, password);
 			if (matched == true) {
-				user = userService.findByEmail(email);
-				return new ResponseEntity<>(user, HttpStatus.OK);
+				user = userService.findByEmail(userLogin.getEmail());
+				System.out.println("go to home");
+				return "home";
 			} else {
-				return new ResponseEntity<>("Wrong email and/or password", HttpStatus.BAD_REQUEST);
+				System.out.println("wrong email and/or password");
+				return "/error";
 			}
-
 		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			e.printStackTrace();
+			return "/error";
 		}
 	}
 
@@ -151,7 +166,6 @@ public class UserController implements ErrorController {
 
 	@RequestMapping("/error")
 	public String handleError() {
-		// do something like logging
 		return "error";
 	}
 
