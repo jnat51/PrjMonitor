@@ -90,7 +90,7 @@
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
-			<version>6.2</version>
+			<version>8.0</version>
 		</dependency>
 
 		<!-- Some containers like Tomcat don't have jstl library -->
